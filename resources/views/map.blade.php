@@ -213,5 +213,91 @@
 
             drawnItems.addLayer(layer);
         });
+
+        //Menampilkan Point GeoJSON pada WEBGIS
+        var point = L.geoJson(null, {
+            onEachFeature: function(feature, layer) {
+                var popupContent = "Nama: " + feature.properties.name + "<br>" +
+                    "Deskripsi: " + feature.properties.description + "<br>" +
+                    "Geometry: " + feature.geometry.coordinates;
+                layer.on({
+                    click: function(e) {
+                        point.bindPopup(popupContent);
+                    },
+                    mouseover: function(e) {
+                        point.bindTooltip(feature.properties.name);
+                    },
+                });
+            },
+        });
+        $.getJSON("{{ route('api.points') }}", function(data) {
+            point.addData(data);
+            map.addLayer(point);
+        });
+
+
+        // Menampilkan Point GeoJSON pada WEBGIS
+        var polylines = L.geoJson(null, {
+            /* Style polylines */
+            style: function(feature) {
+                return {
+                    color: "#DC143C",
+                    weight: 3,
+                    opacity: 1,
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                var popupContent = "Nama: " + feature.properties.name + "<br>" +
+                    "Deskripsi: " + feature.properties.description + "<br>" +
+                    "Panjang: " + feature.properties.length_km.toFixed(2) + " km";
+                layer.on({
+                    click: function(e) {
+                        polylines.bindPopup(popupContent);
+                    },
+                    mouseover: function(e) {
+                        polylines.bindTooltip(feature.properties.keterangan, {
+                            sticky: true,
+                        });
+                    },
+                });
+            },
+        });
+        $.getJSON("{{ route('api.polylines') }}", function(data) {
+            polylines.addData(data);
+            map.addLayer(polylines);
+        });
+
+        // GeoJSON Polygon
+        var polygon = L.geoJson(null, {
+            /* Style polygon */
+            style: function(feature) {
+                return {
+                    color: "#7CFC00",
+                    fillColor: "#7CFC00",
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.5,
+                };
+            },
+            onEachFeature: function(feature, layer) {
+                var popupContent = "Nama: " + feature.properties.name + "<br>" +
+                    "Deskripsi: " + feature.properties.description + "<br>" +
+                    "Luas: " + feature.properties.area_km.toFixed(2) + " km2";
+                layer.on({
+                    click: function(e) {
+                        polygon.bindPopup(popupContent);
+                    },
+                    mouseover: function(e) {
+                        polygon.bindTooltip(feature.properties.kecamatan, {
+                            sticky: true,
+                        });
+                    },
+                });
+            },
+        });
+        $.getJSON("{{ route('api.polygons') }}", function(data) {
+            polygon.addData(data);
+            map.addLayer(polygon);
+        });
     </script>
 @endsection
