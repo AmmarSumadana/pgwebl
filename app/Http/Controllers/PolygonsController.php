@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 
 class PolygonsController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         $this->polygons = new PolygonsModel();
     }
     /**
@@ -32,29 +33,46 @@ class PolygonsController extends Controller
     public function store(Request $request)
     {
         //validate request
-        $request->validate([
-            'name'=> 'required|unique:polygons,name',
-            'description' => 'required',
-            'geom_polygon' => 'required',
-        ],
-         [
-            'name.required' => 'Name is required',
-            'name.unique' => 'Name already exists',
-            'description.required' => 'Description is required',
-            'geom_polygon.required' => 'Geometry polygon is required',
-        ]
+        $request->validate(
+            [
+                'name' => 'required|unique:polygons,name',
+                'description' => 'required',
+                'geom_polygon' => 'required',
+                'image' => 'nullable|mimes:jpeg,png,jpg,gif,tif|max:10240', // 10MB
+            ],
+            [
+                'name.required' => 'Name is required',
+                'name.unique' => 'Name already exists',
+                'description.required' => 'Description is required',
+                'geom_polygon.required' => 'Geometry polygon is required',
+            ]
         );
+
+        //membuat direktori penyimpanan jika belum ada
+        if (!is_dir('storage')) {
+            mkdir('./storage', 0777);
+        }
+
+        //metode untuk mendapatkan file untuk disimpan
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name_image = time() . "_polygon." . strtolower($image->getClientOriginalExtension());
+            $image->move('storage/images', $name_image);
+        } else {
+            $name_image = null;
+        }
 
         $data = [
             'geom' => $request->geom_polygon,
             'name' => $request->name,
             'description' => $request->description,
+            'image' => $name_image
         ];
 
 
-       if(!$this->polygons->create($data)) {
-        return redirect()->route('map')->with('error', 'Polygon failed to add');
-       }
+        if (!$this->polygons->create($data)) {
+            return redirect()->route('map')->with('error', 'Polygon failed to add');
+        }
 
         return redirect()->route('map')->with('success', 'Polygon has been added');
 
