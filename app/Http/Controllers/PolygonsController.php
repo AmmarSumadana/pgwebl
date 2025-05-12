@@ -90,7 +90,11 @@ class PolygonsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $data = [
+            'title' => 'Edit Polygon',
+            'id' => $id,
+        ];
+        return view('edit_polygon' , $data);
     }
 
     /**
@@ -106,6 +110,19 @@ class PolygonsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+        $imagefile = $this->polygons->find($id)->image;
+
+        if (!$this->polygons->destroy($id)) {
+            return redirect()->route('map')->with('error', 'Polygons failed to delete!');
+        }
+        // delete image
+        if ($imagefile != null) {
+            if (file_exists('./storage/images/' . $imagefile)) {
+                unlink('./storage/images/' . $imagefile);
+            }
+        }
+
+        return redirect()->route('map')->with('success', 'Polygons has been deleted!');
     }
 }

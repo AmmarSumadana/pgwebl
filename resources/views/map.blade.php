@@ -22,7 +22,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="CreatePointModalLabel">Point Title</h1>
+                    <h1 class="modal-title fs-5" id="CreatePointModalLabel">Create Point</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -70,7 +70,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="CreatePolylineModalLabel">Polyline Title</h1>
+                    <h1 class="modal-title fs-5" id="CreatePolylineModalLabel">Create Polyline</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -119,7 +119,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="CreatePolygonModalLabel">Polygon Title</h1>
+                    <h1 class="modal-title fs-5" id="CreatePolygonModalLabel">Create Polygon</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -242,11 +242,37 @@
         //Menampilkan Point GeoJSON pada WEBGIS
         var point = L.geoJson(null, {
             onEachFeature: function(feature, layer) {
+
+                //route edit
+                var routeedit = "{{ route('points.edit', ':id') }}";
+                routeedit = routeedit.replace(':id', feature.properties.id);
+
+                //route delete
+                var routedelete = "{{ route('points.destroy', ':id') }}";
+                routedelete = routedelete.replace(':id', feature.properties.id);
+
                 var popupContent = "Nama: " + feature.properties.name + "<br>" +
                     "Deskripsi: " + feature.properties.description + "<br>" +
                     "Geometry: " + feature.geometry.coordinates + "<br>" +
                     "<img src='{{ asset('storage/images') }}/" + feature.properties.image +
-                    "' width='200'alt=''>";
+                    "' width='200'alt=''>" + "<br>" +
+                    // edit
+
+                    "<div class='row mt-4'>" +
+                    "<div class='col-3 text-end'>" +
+
+                    "<a href='" + routeedit +
+                    "' class='btn btn-warning btn-sm text-white d-block w-100'><i class='fa-solid fa-pen-to-square'></i></a>" +
+
+                    "</div>" +
+                    "<div class='col-6 text-start'>" +
+
+                    //delete
+                    "<form method='POST' action='" + routedelete + "'>" + '@csrf' + '@method('DELETE')' +
+                    "<button type='submit' class='btn btn-danger btn-sm' onclick='return confirm(`Yakin akan dihapus?`)'><i class='fa-solid fa-trash-can'></i></button>" +
+                    "</form>" +
+                    "</div>" +
+                    "</div>";
                 layer.on({
                     click: function(e) {
                         point.bindPopup(popupContent);
@@ -263,7 +289,7 @@
         });
 
 
-        // Menampilkan Point GeoJSON pada WEBGIS
+        // Menampilkan Polylines GeoJSON pada WEBGIS
         var polylines = L.geoJson(null, {
             /* Style polylines */
             style: function(feature) {
@@ -274,11 +300,37 @@
                 };
             },
             onEachFeature: function(feature, layer) {
+
+                //route edit
+                var routeedit = "{{ route('polylines.edit', ':id') }}";
+                routeedit = routeedit.replace(':id', feature.properties.id);
+
+                //route delete
+                var routedelete = "{{ route('polylines.destroy', ':id') }}";
+                routedelete = routedelete.replace(':id', feature.properties.id);
+
                 var popupContent = "Nama: " + feature.properties.name + "<br>" +
                     "Deskripsi: " + feature.properties.description + "<br>" +
                     "Panjang: " + feature.properties.length_km.toFixed(2) + " km" + "<br>" +
                     "<img src='{{ asset('storage/images') }}/" + feature.properties.image +
-                    "' width='200'alt=''>";
+                    "' width='200'alt=''>" + "<br>" +
+                    //edit
+
+                    "<div class='row mt-4'>" +
+                    "<div class='col-3 text-end'>" +
+
+                    "<a href='" + routeedit +
+                    "' class='btn btn-warning btn-sm text-white d-block w-100'><i class='fa-solid fa-pen-to-square'></i></a>" +
+
+                    "</div>" +
+                    "<div class='col-6 text-start'>" +
+
+                    //delete
+                    "<form method='POST' action='" + routedelete + "'>" + '@csrf' + '@method('DELETE')' +
+                    "<button type='submit' class='btn btn-danger btn-sm' onclick='return confirm(`Yakin akan dihapus?`)'><i class='fa-solid fa-trash-can'></i></button>" +
+                    "</form>"
+                "</div>" +
+                "</div>";
                 layer.on({
                     click: function(e) {
                         polylines.bindPopup(popupContent);
@@ -296,6 +348,7 @@
             map.addLayer(polylines);
         });
 
+        // Menampilkan Polygon GeoJSON pada WEBGIS
         // GeoJSON Polygon
         var polygon = L.geoJson(null, {
             /* Style polygon */
@@ -309,11 +362,38 @@
                 };
             },
             onEachFeature: function(feature, layer) {
+
+                //route edit
+                var routeedit = "{{ route('polygons.edit', ':id') }}";
+                routeedit = routeedit.replace(':id', feature.properties.id);
+
+                //route delete
+                var routedelete = "{{ route('polygons.destroy', ':id') }}";
+                routedelete = routedelete.replace(':id', feature.properties.id);
+
                 var popupContent = "Nama: " + feature.properties.name + "<br>" +
                     "Deskripsi: " + feature.properties.description + "<br>" +
                     "Luas: " + feature.properties.area_km.toFixed(2) + " km2" + "<br>" +
                     "<img src='{{ asset('storage/images') }}/" + feature.properties.image +
-                    "' width='200'alt=''>";
+                    "' width='200'alt=''>" + "<br>" +
+                    //edit
+
+
+                    "<div class='row mt-4'>" +
+                    "<div class='col-3 text-end'>" +
+
+                    "<a href='" + routeedit +
+                    "' class='btn btn-warning btn-sm text-white d-block w-100'><i class='fa-solid fa-pen-to-square'></i></a>" +
+
+                    "</div>" +
+                    "<div class='col-6 text-start'>" +
+
+                    //delete
+                    "<form method='POST' action='" + routedelete + "'>" + '@csrf' + '@method('DELETE')' +
+                    "<button type='submit' class='btn btn-danger btn-sm' onclick='return confirm(`Yakin akan dihapus?`)'><i class='fa-solid fa-trash-can'></i></button>" +
+                    "</form>"
+                    "</div>" +
+                    "</div>";
                 layer.on({
                     click: function(e) {
                         polygon.bindPopup(popupContent);
