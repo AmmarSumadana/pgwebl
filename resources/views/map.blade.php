@@ -273,7 +273,8 @@
                     "<button type='submit' class='btn btn-danger btn-sm' onclick='return confirm(`Yakin akan dihapus?`)'><i class='fa-solid fa-trash-can'></i></button>" +
                     "</form>" +
                     "</div>" +
-                    "</div>";
+                    "<div" + "<br>" + "<p>Dibuat Oleh: " + feature.properties.user_created + "</p>"
+                "</div>";
                 layer.on({
                     click: function(e) {
                         point.bindPopup(popupContent);
@@ -312,26 +313,23 @@
 
                 var popupContent = "Nama: " + feature.properties.name + "<br>" +
                     "Deskripsi: " + feature.properties.description + "<br>" +
-                    "Panjang: " + feature.properties.length_km.toFixed(2) + " km" + "<br>" +
+                    "Panjang: " + feature.properties.length_km.toFixed(2) + " km<br>" +
                     "<img src='{{ asset('storage/images') }}/" + feature.properties.image +
-                    "' width='200'alt=''>" + "<br>" +
-                    //edit
+                    "' width='200' alt=''>" + "<br>" +
 
                     "<div class='row mt-4'>" +
                     "<div class='col-3 text-end'>" +
-
                     "<a href='" + routeedit +
                     "' class='btn btn-warning btn-sm text-white d-block w-100'><i class='fa-solid fa-pen-to-square'></i></a>" +
-
                     "</div>" +
                     "<div class='col-6 text-start'>" +
-
-                    //delete
-                    "<form method='POST' action='" + routedelete + "'>" + '@csrf' + '@method('DELETE')' +
+                    "<form method='POST' action='" + routedelete + "'>" +
+                    '@csrf' + '@method('DELETE')' +
                     "<button type='submit' class='btn btn-danger btn-sm' onclick='return confirm(`Yakin akan dihapus?`)'><i class='fa-solid fa-trash-can'></i></button>" +
-                    "</form>"
-                "</div>" +
-                "</div>";
+                    "</form>" +
+                    "</div>" +
+                    "</div>" +
+                    "<p class='mt-2'>Dibuat Oleh: " + feature.properties.user_created + "</p>";
                 layer.on({
                     click: function(e) {
                         polylines.bindPopup(popupContent);
@@ -374,27 +372,23 @@
 
                 var popupContent = "Nama: " + feature.properties.name + "<br>" +
                     "Deskripsi: " + feature.properties.description + "<br>" +
-                    "Luas: " + feature.properties.area_km.toFixed(2) + " km2" + "<br>" +
+                    "Luas: " + feature.properties.area_km.toFixed(2) + " km²<br>" +
                     "<img src='{{ asset('storage/images') }}/" + feature.properties.image +
-                    "' width='200'alt=''>" + "<br>" +
-                    //edit
-
+                    "' width='200' alt=''>" + "<br>" +
 
                     "<div class='row mt-4'>" +
                     "<div class='col-3 text-end'>" +
-
                     "<a href='" + routeedit +
                     "' class='btn btn-warning btn-sm text-white d-block w-100'><i class='fa-solid fa-pen-to-square'></i></a>" +
-
                     "</div>" +
                     "<div class='col-6 text-start'>" +
-
-                    //delete
-                    "<form method='POST' action='" + routedelete + "'>" + '@csrf' + '@method('DELETE')' +
+                    "<form method='POST' action='" + routedelete + "'>" +
+                    '@csrf' + '@method('DELETE')' +
                     "<button type='submit' class='btn btn-danger btn-sm' onclick='return confirm(`Yakin akan dihapus?`)'><i class='fa-solid fa-trash-can'></i></button>" +
-                    "</form>"
+                    "</form>" +
                     "</div>" +
-                    "</div>";
+                    "</div>" +
+                    "<p class='mt-2'>Dibuat Oleh: " + feature.properties.user_created + "</p>";
                 layer.on({
                     click: function(e) {
                         polygon.bindPopup(popupContent);
